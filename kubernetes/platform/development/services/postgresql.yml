@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  labels:
+    db: ecommerce-postgres
+data:
+  init.sql: |
+    CREATE DATABASE ecommerce;
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ecommerce-postgres
+  labels:
+    db: ecommerce-postgres
+spec:
+  selector:
+    matchLabels:
+      db: ecommerce-postgres
+  template:
+    metadata:
+      labels:
+        db: ecommerce-postgres
+    spec:
+      containers:
+        - name: ecommerce-postgres
+          image: postgres:16
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: secret
+          resources:
+            requests:
+              cpu: 100m
+              memory: 60Mi
+            limits:
+              cpu: 200m
+              memory: 120Mi
+          volumeMounts:
+            - mountPath: /docker-entrypoint-initdb.d
+              name: postgres-config-volume
+      volumes:
+        - name: postgres-config-volume
+          configMap:
+            name: postgres-config
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ecommerce-postgres
+  labels:
+    db: ecommerce-postgres
+spec:
+  type: ClusterIP
+  selector:
+    db: ecommerce-postgres
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
