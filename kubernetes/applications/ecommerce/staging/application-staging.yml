@@ -1,0 +1,2 @@
+ecommerce:
+  greeting: Hello e-commerce application from a staging Kubernetes environment!

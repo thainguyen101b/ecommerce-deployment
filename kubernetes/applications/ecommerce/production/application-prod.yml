@@ -1,0 +1,5 @@
+ecommerce:
+  greeting: Hello e-commerce application from a production Kubernetes environment!
+spring:
+  config:
+    import: configtree:/workspace/secrets/*/
