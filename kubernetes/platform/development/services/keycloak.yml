@@ -26,6 +26,10 @@ spec:
               value: admin
             - name: KEYCLOAK_ADMIN_PASSWORD
               value: secret
+            - name: KC_HOSTNAME
+              value: http://ecommerce-keycloak
+            - name: KC_HOSTNAME_ADMIN
+              value: http://ecommerce-keycloak
           startupProbe:
             httpGet:
               path: /realms/master
